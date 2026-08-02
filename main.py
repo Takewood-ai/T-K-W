@@ -1,25 +1,15 @@
 import random
+from model import load_model
 
-# Загружаем обученную модель
-text = open("data.txt", "r", encoding="utf-8").read()
+# Загружаем память T-K-W
+model = load_model()
 
-words = text.split()
-
-model = {}
-
-for i in range(len(words)-1):
-    word = words[i]
-    next_word = words[i+1]
-
-    if word not in model:
-        model[word] = []
-
-    model[word].append(next_word)
-
+if not model:
+    print("Память пуста! Сначала запусти обучение.")
+    exit()
 
 def generate(start_word, length=10):
     result = [start_word]
-
     word = start_word
 
     for _ in range(length):
@@ -32,19 +22,20 @@ def generate(start_word, length=10):
     return " ".join(result)
 
 
-print("T-K-W 0.1 запущен!")
+print("T-K-W 0.2 запущен!")
+print("Память загружена.")
 print("Напиши 'выход' для остановки.")
 
 while True:
     user = input("Ты: ")
 
-    if user == "выход":
+    if user.lower() == "выход":
+        print("T-K-W: До встречи!")
         break
 
-    first_word = user.split()[0]
+    words = user.split()
 
-    if first_word in model:
-        answer = generate(first_word)
-        print("T-K-W:", answer)
+    if words[0] in model:
+        print("T-K-W:", generate(words[0]))
     else:
         print("T-K-W: Я пока не знаю это слово.")
